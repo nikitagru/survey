@@ -1,5 +1,6 @@
 package com.nikitagru.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,7 +24,7 @@ public class Survey {
     private Date endSurvey;
     private String description;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "survey")
     private Collection<Question> questions = new ArrayList<>();
 
     public void setStartSurvey(String startSurvey) {
@@ -35,6 +36,10 @@ public class Survey {
         }
     }
 
+    public void setStartSurvey(Date startSurvey) {
+        this.startSurvey = startSurvey;
+    }
+
     public void setEndSurvey(String endSurvey) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         try {
@@ -42,5 +47,13 @@ public class Survey {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setEndSurvey(Date endSurvey) {
+        this.endSurvey = endSurvey;
+    }
+
+    public Question findQuestion(String text) {
+        return questions.stream().filter(q -> q.getQuestionText().equals(text)).findFirst().orElse(null);
     }
 }

@@ -18,7 +18,11 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
-//    public Question getQuestion(Long surveyId) {
-//        return questionRepository.findBySurveyId(surveyId);
-//    }
+    public Question getQuestionById(Long id) {
+        return questionRepository.findById(id).orElse(null);
+    }
+
+    public void delete(Question question) {
+        questionRepository.delete(question);
+    }
 }
