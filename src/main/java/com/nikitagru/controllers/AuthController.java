@@ -1,33 +1,61 @@
 package com.nikitagru.controllers;
 
+import com.nikitagru.dto.AuthenticationRequestDto;
+import com.nikitagru.entities.Role;
 import com.nikitagru.entities.User;
+import com.nikitagru.security.jwt.JwtTokenProvider;
 import com.nikitagru.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping(value = "/api/v1/auth/")
 public class AuthController {
-    private UserService userService;
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final UserService userService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String signInPage() {
-        return "login";
-    }
+    @PostMapping("login")
+    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
+        try {
+            String username = requestDto.getUsername();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+            User user = userService.getUser(username);
 
-    @GetMapping("/logout")
-    public String logoutPage() {
-        return "logout";
-    }
-   
+            if (user == null) {
+                throw new UsernameNotFoundException("User with username: " + username + " not found");
+            }
 
+            String token = jwtTokenProvider.createToken(username, (List<Role>) user.getRoles());
+
+            Map<Object, Object> response = new HashMap<>();
+            response.put("username", username);
+            response.put("token", token);
+
+            return ResponseEntity.ok(response);
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+    }
 }

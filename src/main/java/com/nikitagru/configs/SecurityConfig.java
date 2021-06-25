@@ -1,47 +1,48 @@
 package com.nikitagru.configs;
 
-import com.nikitagru.services.UserService;
+import com.nikitagru.security.jwt.JwtConfigurer;
+import com.nikitagru.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
+    private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/create/**").hasRole("ADMIN")
-                .antMatchers("/update/**").hasRole("ADMIN")
-                .antMatchers("/delete/**").hasRole("ADMIN")
+        http
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .formLogin().loginPage("/login")
+                .authorizeRequests()
+                .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                .logout().logoutUrl("/logout")
-                .logoutSuccessUrl("/");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userService);
-        return authenticationProvider;
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 }
