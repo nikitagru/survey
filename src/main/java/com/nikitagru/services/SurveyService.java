@@ -5,6 +5,8 @@ import com.nikitagru.repositories.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SurveyService {
     private SurveyRepository surveyRepository;
@@ -24,5 +26,13 @@ public class SurveyService {
 
     public void delete(Survey survey) {
         surveyRepository.delete(survey);
+    }
+
+    public List<Survey> getAllSurveys() {
+        return (List<Survey>) surveyRepository.findAll();
+    }
+
+    public Survey getSurveyById(Long id) {
+        return surveyRepository.findById(id).orElse(null);
     }
 }

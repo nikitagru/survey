@@ -27,6 +27,12 @@ public class Survey {
     @OneToMany(mappedBy = "survey")
     private Collection<Question> questions = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "customers_surveys",
+            joinColumns = @JoinColumn(name = "surveyId"),
+            inverseJoinColumns = @JoinColumn(name = "customerId"))
+    private Collection<Customer> customers = new ArrayList<>();
+
     public void setStartSurvey(String startSurvey) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         try {

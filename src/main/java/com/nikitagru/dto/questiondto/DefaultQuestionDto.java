@@ -12,7 +12,6 @@ public class DefaultQuestionDto {
     public Question questionDtoToQuestion(Survey survey) {
         Question question = new Question();
         question.setQuestionText(questionText);
-        question.setSurvey(survey);
         question.setRadioButtonsQuestion(false);
         question.setCheckBoxQuestion(false);
 

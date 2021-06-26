@@ -4,18 +4,19 @@ import com.nikitagru.dto.surveydto.DateDto;
 import com.nikitagru.dto.surveydto.DescriptionDto;
 import com.nikitagru.dto.surveydto.NameDto;
 import com.nikitagru.dto.surveydto.SurveyDto;
+import com.nikitagru.entities.Customer;
 import com.nikitagru.entities.Survey;
 import com.nikitagru.services.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping(value = "/api/v1/admin/")
 public class SurveyController {
     private SurveyService surveyService;
 
@@ -97,5 +98,19 @@ public class SurveyController {
         }
 
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/get/{id}/customers",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Customer>> getAllCustomers(@PathVariable("id") Long surveyId) {
+        Survey survey = surveyService.getSurveyById(surveyId);
+
+        if (survey != null) {
+            List<Customer> customers = (List<Customer>) survey.getCustomers();
+
+            return new ResponseEntity<>(customers, HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

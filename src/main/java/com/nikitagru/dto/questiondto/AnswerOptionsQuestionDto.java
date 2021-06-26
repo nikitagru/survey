@@ -18,7 +18,6 @@ public class AnswerOptionsQuestionDto {
         question.setRadioButtonsQuestion(isRadio);
         question.setCheckBoxQuestion(isRadio);
         question.setAnswers(answers);
-        question.setSurvey(survey);
 
         return question;
     }

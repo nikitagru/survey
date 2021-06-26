@@ -14,9 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/api/v1/admin/")
 public class QuestionController {
     private QuestionService questionService;
 
@@ -46,7 +48,6 @@ public class QuestionController {
                 question.setQuestionText(defaultQuestionDto.getQuestionText());
                 question.setCheckBoxQuestion(false);
                 question.setRadioButtonsQuestion(false);
-                question.setSurvey(survey);
                 questionService.saveQuestion(question);
                 return new ResponseEntity<>("Question created", HttpStatus.CREATED);
             }
@@ -71,7 +72,6 @@ public class QuestionController {
                 question.setRadioButtonsQuestion(true);
                 question.setCheckBoxQuestion(false);
                 question.setAnswers(answerOptionsQuestionDto.getAnswers());
-                question.setSurvey(survey);
                 questionService.saveQuestion(question);
                 return new ResponseEntity<>("Question created", HttpStatus.CREATED);
             }
@@ -98,7 +98,6 @@ public class QuestionController {
                 question.setRadioButtonsQuestion(false);
                 question.setCheckBoxQuestion(true);
                 question.setAnswers(answerOptionsQuestionDto.getAnswers());
-                question.setSurvey(survey);
                 questionService.saveQuestion(question);
                 return new ResponseEntity<>("Question created", HttpStatus.CREATED);
             }

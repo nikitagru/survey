@@ -1,5 +1,8 @@
 package com.nikitagru.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,10 +29,6 @@ public class Question {
     @JoinColumn(name = "surveyId", referencedColumnName = "id")
     private Survey survey;
 
-    public Long getSurveyId() {
-        return survey.getId();
-    }
-
     public String[] getAnswers() {
         String[] answersArray = answers.split("\n");
         return answersArray;
@@ -43,18 +42,5 @@ public class Question {
         }
 
         this.answers = stringBuffer.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
-        return radioButtonsQuestion == question.radioButtonsQuestion && checkBoxQuestion == question.checkBoxQuestion && questionText.equals(question.questionText) && survey.equals(question.survey);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(questionText, radioButtonsQuestion, checkBoxQuestion, survey);
     }
 }
