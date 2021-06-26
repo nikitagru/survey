@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/***
+ * Админский контроллер
+ */
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
 public class QuestionController {
@@ -34,6 +37,11 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
+    /***
+     * Создание обычного вопроса
+     * @param defaultQuestionDto данные обычного вопроса
+     * @return Результат создания вопроса
+     */
     @PostMapping(value = "/create/defaultquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,6 +65,11 @@ public class QuestionController {
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Создание вопроса с радио-кнопками
+     * @param answerOptionsQuestionDto Данные для вопроса с выбоом ответа
+     * @return Результат создание вопроса с радио-кнопкой
+     */
     @PostMapping(value = "/create/radioquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,6 +95,11 @@ public class QuestionController {
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Создание вопроса с выбором нескольких ответов
+     * @param answerOptionsQuestionDto Данные для создания вопроса с выбором нескольких ответов
+     * @return Результат создания вопроса
+     */
     @PostMapping(value = "/create/checkboxquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -108,6 +126,11 @@ public class QuestionController {
 
     }
 
+    /***
+     * Обновить обычный вопрос
+     * @param defaultQuestionDto Данные для обновления обычного вопроса
+     * @return Результат обновления вопроса
+     */
     @PostMapping(value = "/update/defaultquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -130,6 +153,11 @@ public class QuestionController {
         return new ResponseEntity<>("Survey doesn't found", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Обновить вопрос радио-кнопками
+     * @param answerOptionsQuestionDto Данные для обновления вопроса с радио-кнопками
+     * @return Результат обновления вопроса
+     */
     @PostMapping(value = "/update/radioquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -154,6 +182,11 @@ public class QuestionController {
         return new ResponseEntity<>("Survey doesn't found", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Обновление вопроса с множественным выбором ответа
+     * @param answerOptionsQuestionDto данные для обновления вопроса с нескольким выбором ответов
+     * @return Результат обновления вопроса
+     */
     @PostMapping(value = "/update/checkboxquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -178,6 +211,11 @@ public class QuestionController {
         return new ResponseEntity<>("Survey doesn't found", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Удалить обычный вопрос
+     * @param defaultQuestionDto Данные для обычного вопроса
+     * @return Результат удаления
+     */
     @PostMapping(value = "/delete/defaultquestion",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -199,7 +237,12 @@ public class QuestionController {
         return new ResponseEntity<>("Survey doesn't found", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(value = "/delete/radioquestion",
+    /***
+     * Удаление вопроса с несколькими вариантами ответа
+     * @param answerOptionsQuestionDto Данные для вопроса с множественным выбором ответа
+     * @return Резульат удаления
+     */
+    @PostMapping(value = "/delete/answeroptions",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteRadioQuestion(@RequestBody AnswerOptionsQuestionDto answerOptionsQuestionDto) {
@@ -209,12 +252,9 @@ public class QuestionController {
             Question questionFromDb = survey.findQuestion(answerOptionsQuestionDto.getQuestionText());
 
             if (questionFromDb != null) {
-                questionFromDb.setAnswers(answerOptionsQuestionDto.getAnswers());
-                questionFromDb.setQuestionText(answerOptionsQuestionDto.getQuestionText());
+                questionService.delete(questionFromDb);
 
-                questionService.saveQuestion(questionFromDb);
-
-                return new ResponseEntity<>("Updated question", HttpStatus.OK);
+                return new ResponseEntity<>("Deleted question", HttpStatus.OK);
             }
 
             return new ResponseEntity<>("Question doesn't found", HttpStatus.NOT_FOUND);

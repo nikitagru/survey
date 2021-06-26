@@ -3,6 +3,9 @@ package com.nikitagru.dto.answerdto;
 import com.nikitagru.entities.Answer;
 import lombok.Data;
 
+/***
+ * Минимизированная вариация данных ответа
+ */
 @Data
 public class MinAnswerDto {
     private Long id;

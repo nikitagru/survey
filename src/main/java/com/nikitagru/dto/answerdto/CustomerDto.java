@@ -3,10 +3,12 @@ package com.nikitagru.dto.answerdto;
 import com.nikitagru.entities.Customer;
 import lombok.Data;
 
-import javax.persistence.ManyToMany;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/***
+ * Данные клиента
+ */
 @Data
 public class CustomerDto {
     private String uniqueUserData;
@@ -21,6 +23,10 @@ public class CustomerDto {
         return emailMatcher.find() || telMatcher.find();
     }
 
+    /***
+     * Преобразование данных клиента в клиента
+     * @return Объект клиента
+     */
     public Customer customerDtoToCustomer() {
         Customer customer = new Customer();
         if (isCorrectData(uniqueUserData)) {

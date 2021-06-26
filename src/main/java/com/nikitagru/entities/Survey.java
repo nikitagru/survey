@@ -1,6 +1,5 @@
 package com.nikitagru.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -11,6 +10,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
+/***
+ * Опрос
+ */
 @Entity
 @Data
 @Table(name = "surveys")

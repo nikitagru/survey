@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/***
+ * Роль пользователя
+ */
 @Entity
 @Data
 @Table(name = "roles")

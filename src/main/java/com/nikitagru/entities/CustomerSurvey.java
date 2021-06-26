@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+/***
+ * Сущность записи таблицы о принадлежности клиентов к опросу
+ */
 @Entity
 @Data
 @Table(name = "customers_surveys")

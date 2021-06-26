@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/***
+ * Данные для обновления вопроса с выбором ответа
+ */
 @Data
 public class UpdateAswerOprionsQuestionDto {
     private String surveyName;

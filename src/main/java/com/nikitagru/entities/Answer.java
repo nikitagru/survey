@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+/***
+ * Ответ клиента
+ */
 @Entity
 @Table(name = "answers")
 @Data

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 
+/***
+ * Репозиторий отношений клиентов к опросу
+ */
 @Repository
 public interface CustomerSurveyRepository extends JpaRepository<CustomerSurvey, Long> {
     @Query(value = "INSERT INTO customers_surveys (survey_id, customer_id) VALUES (:#{#surveyid}, :#{#customerid})", nativeQuery = true)

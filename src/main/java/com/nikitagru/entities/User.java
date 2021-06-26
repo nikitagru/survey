@@ -5,6 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Collection;
 
+/***
+ * Пользователь
+ */
 @Entity
 @Data
 @Table(name = "users")

@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/***
+ * Контроллер аутентификации
+ */
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
 public class AuthController {

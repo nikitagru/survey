@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/***
+ * Клиент
+ */
 @Entity
 @Data
 @Table(name = "customers")

@@ -1,20 +1,12 @@
 package com.nikitagru.dto.questiondto;
 
-import com.nikitagru.entities.Question;
-import com.nikitagru.entities.Survey;
 import lombok.Data;
 
+/***
+ * Данные обычного вопроса
+ */
 @Data
 public class DefaultQuestionDto {
     private String surveyName;
     private String questionText;
-
-    public Question questionDtoToQuestion(Survey survey) {
-        Question question = new Question();
-        question.setQuestionText(questionText);
-        question.setRadioButtonsQuestion(false);
-        question.setCheckBoxQuestion(false);
-
-        return question;
-    }
 }

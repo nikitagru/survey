@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+/***
+ * Минимизированные данные опроса
+ */
 @Data
 public class MinSurveyDto {
     private Long id;

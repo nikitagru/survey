@@ -5,6 +5,9 @@ import com.nikitagru.repositories.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/***
+ * Сервис ответов
+ */
 @Service
 public class AnswerService {
     private AnswerRepository answerRepository;

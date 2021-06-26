@@ -7,6 +7,9 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+/***
+ * Фильтр JWT
+ */
 public class JwtTokenFilter extends GenericFilter {
     private JwtTokenProvider jwtTokenProvider;
 

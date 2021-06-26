@@ -6,6 +6,9 @@ import com.nikitagru.repositories.CustomerSurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/***
+ * Сервис клиентов
+ */
 @Service
 public class CustomerService {
     private CustomerRepository customerRepository;

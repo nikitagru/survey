@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/***
+ * Контроллер опроса
+ */
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
 public class SurveyController {
@@ -25,6 +28,11 @@ public class SurveyController {
         this.surveyService = surveyService;
     }
 
+    /***
+     * Создание опроса
+     * @param surveyDto Данные для создания опроса
+     * @return Результат создания опроса
+     */
     @PostMapping(value = "/create",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +53,32 @@ public class SurveyController {
         return new ResponseEntity<>("Current survey exists", HttpStatus.CONFLICT);
     }
 
+    /***
+     * Создание даты начала опроса
+     * @param dateDto Данные даты
+     * @return Результат создание даты старта
+     */
+    @PostMapping(value = "/create/startdate",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createStartDate(@RequestBody DateDto dateDto) {
+        Survey survey = surveyService.getSurveyByName(dateDto.getSurveyName());
+
+        if (survey.getStartSurvey() != null) {
+            survey.setStartSurvey(dateDto.getNewDate());
+            surveyService.save(survey);
+
+            return new ResponseEntity<>("Start date updated", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Start date is exist", HttpStatus.CONFLICT);
+    }
+
+    /***
+     * Обновить название опроса
+     * @param nameDto Данные для обновления названия
+     * @return Результат обновления названия
+     */
     @PostMapping(value = "/update/name",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,6 +94,11 @@ public class SurveyController {
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Изменение описания опроса
+     * @param descriptionDto Данные описания
+     * @return Результат изменения описания
+     */
     @PostMapping(value = "/update/description",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,13 +114,18 @@ public class SurveyController {
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Изменение даты окончания опроса
+     * @param dateDto Данные даты
+     * @return Результат обновления даты окончания
+     */
     @PostMapping(value = "/update/end",
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateEndDate(@RequestBody DateDto dateDto) {
-        Survey survey = surveyService.getSurveyByName(dateDto.getName());
+        Survey survey = surveyService.getSurveyByName(dateDto.getSurveyName());
         if (survey != null) {
-            survey.setEndSurvey(dateDto.getNewEndDate());
+            survey.setEndSurvey(dateDto.getNewDate());
             surveyService.save(survey);
             return new ResponseEntity<>("Updated end date", HttpStatus.OK);
         }
@@ -89,6 +133,11 @@ public class SurveyController {
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Удаление опроса
+     * @param name Название опроса
+     * @return Результат удаления
+     */
     @PostMapping("/delete/{name}")
     public ResponseEntity<String> delete(@PathVariable("name") String name) {
         Survey survey = surveyService.getSurveyByName(name);
@@ -100,6 +149,11 @@ public class SurveyController {
         return new ResponseEntity<>("Survey with current name doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Получение всех клиентов, прошедшых опрос не анонимно
+     * @param surveyId
+     * @return
+     */
     @GetMapping(value = "/get/{id}/customers",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

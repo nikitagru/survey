@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 
+/***
+ * Роли пользователей
+ */
 @Entity
 @Data
 @Table(name = "users_roles")

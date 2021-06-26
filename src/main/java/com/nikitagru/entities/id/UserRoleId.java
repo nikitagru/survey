@@ -2,6 +2,9 @@ package com.nikitagru.entities.id;
 
 import java.io.Serializable;
 
+/***
+ * Id для таблицы о принадлежности пользователя к роли
+ */
 public class UserRoleId implements Serializable {
     private long user_id;
     private long role_id;

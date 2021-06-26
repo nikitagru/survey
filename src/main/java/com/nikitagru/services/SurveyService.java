@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/***
+ * Сервис опросов
+ */
 @Service
 public class SurveyService {
     private SurveyRepository surveyRepository;

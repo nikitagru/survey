@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
+/***
+ * Пользовательский контроллер
+ */
 @RestController
 @RequestMapping(value = "/api/v1/customer/")
 public class CustomerController {
@@ -52,6 +54,10 @@ public class CustomerController {
         this.surveyService = surveyService;
     }
 
+    /***
+     * Получение всех опросов в минимизированном виде
+     * @return опросы в минимизированном виде
+     */
     @GetMapping(value = "/getall",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,6 +81,11 @@ public class CustomerController {
         return new ResponseEntity<>(minSurveyDtos, HttpStatus.FOUND);
     }
 
+    /***
+     * Получение опроса в минимизированном виде
+     * @param id id опроса
+     * @return опрос в минимизированном виде
+     */
     @GetMapping(value = "/get/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,6 +106,11 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Отправка ответа
+     * @param answerDto Ответ в минимизированном виде
+     * @return Результат отправки ответа
+     */
     @PostMapping(value = "/answer",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -127,6 +143,12 @@ public class CustomerController {
         return new ResponseEntity<>("Current question or customer doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Сохранить даннные клиента для опроса
+     * @param surveyId id опроса
+     * @param customerDto Клиент в минимизированном виде
+     * @return Результат сохранения данных пользователя
+     */
     @PostMapping(value = "/save/{id}")
     public ResponseEntity<String> saveCustomerData(@PathVariable("id") Long surveyId, @RequestBody CustomerDto customerDto) {
         Customer customer = customerDto.customerDtoToCustomer();
@@ -141,6 +163,12 @@ public class CustomerController {
         return new ResponseEntity<>("Current survey doesn't exist", HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Получение всех ответов клиента для опроса
+     * @param id id опроса
+     * @param customersAnswersDto данные пользователя для опроса
+     * @return Массив ответов
+     */
     @GetMapping(value = "/get/answers/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -166,6 +194,11 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /***
+     * Получение всех ответов пользователя
+     * @param customersAnswersDto данные пользователя
+     * @return Массив всех ответов
+     */
     @GetMapping(value = "/get/answers",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
