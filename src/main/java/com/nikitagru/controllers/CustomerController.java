@@ -102,23 +102,27 @@ public class CustomerController {
         Answer answer = new Answer();
         Customer customer = customerService.getCustomerById(answerDto.getCustomerId());
         Question question = questionService.getQuestionById(answerDto.getQuestionId());
-        if (question != null && customer != null) {
+        if (question != null) {
             Survey survey = surveyService.getSurveyById(answerDto.getSurveyId());
 
-            Date currentDate = new Date();
+            if (survey != null) {
+                Date currentDate = new Date();
 
-            if (survey.getEndSurvey().after(currentDate)) {
-                answer.setQuestion(question);
-                answer.setCustomer(customer);
-                answer.setSurvey(survey);
-                answer.setAnswerText(answerDto.getAnswer());
+                if (survey.getEndSurvey().after(currentDate)) {
+                    answer.setQuestion(question);
+                    answer.setCustomer(customer);
+                    answer.setSurvey(survey);
+                    answer.setAnswerText(answerDto.getAnswer());
 
-                answerService.saveAnswer(answer);
+                    answerService.saveAnswer(answer);
 
-                return new ResponseEntity<>("Answer Saved", HttpStatus.OK);
+                    return new ResponseEntity<>("Answer Saved", HttpStatus.OK);
+                }
+
+                return new ResponseEntity<>("Time is out", HttpStatus.BAD_REQUEST);
             }
 
-            return new ResponseEntity<>("Time is out", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Current survey doesn't exist", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>("Current question or customer doesn't exist", HttpStatus.NOT_FOUND);
     }
@@ -165,23 +169,21 @@ public class CustomerController {
     @GetMapping(value = "/get/answers",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<HashMap<Survey, List<MinAnswerDto>>> getAllSurveysAndAnswers(@RequestBody CustomersAnswersDto customersAnswersDto) {
-        HashMap<Survey, List<MinAnswerDto>> result = new HashMap<>();
+    public ResponseEntity<List<MinAnswerDto>> getAllSurveysAndAnswers(@RequestBody CustomersAnswersDto customersAnswersDto) {
+        List<MinAnswerDto> result = new ArrayList<>();
 
         Customer customer = customerService.getCustomerById(customersAnswersDto.getCustomerId());
 
         if (customer != null) {
-            List<MinAnswerDto> answers = new ArrayList<>();
 
             for (Survey survey : customer.getSurveys()) {
                 for (Answer answer : customer.getAnswers()) {
                     if (survey.equals(answer.getSurvey())) {
                         MinAnswerDto minAnswerDto = new MinAnswerDto();
                         minAnswerDto.answerToAnswerDto(answer);
-                        answers.add(minAnswerDto);
+                        result.add(minAnswerDto);
                     }
                 }
-                result.put(survey, answers);
             }
 
             return new ResponseEntity<>(result, HttpStatus.FOUND);
